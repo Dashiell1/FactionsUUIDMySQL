@@ -2048,14 +2048,49 @@ public class MainConfig {
                 return efficientStorage;
             }
         }
+        public class Mysql{
+            @Comment("If you choose MySQL as your storage, you may configure the connection here.")
+            private String hostName = "127.0.0.1";
+            private String databaseName = "factions";
+            private String userName = "root";
+            private String password = "password";
+            private int port = 3306;
+            private boolean ssl = true;
 
-        @Comment("Presently, the only option is JSON.")
+            public String getHostName() {
+                return hostName;
+            }
+
+            public String getDatabaseName() {
+                return databaseName;
+            }
+
+            public String getUserName() {
+                return userName;
+            }
+
+            public String getPassword() {
+                return password;
+            }
+
+            public int getPort() {
+                return port;
+            }
+
+            public boolean useSsl() {
+                return ssl;
+            }
+        }
+
+        @Comment("You may set JSON or MYSQL; JSON is default.")
         private String storage = "JSON";
         private Json json = new Json();
-
+        private Mysql mysql = new Mysql();
+        public Mysql mysql() {return mysql; }
         public Json json() {
             return json;
         }
+        public String getStorageType() { return storage; }
     }
 
     public class RestrictWorlds {

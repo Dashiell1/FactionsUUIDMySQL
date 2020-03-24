@@ -1,6 +1,7 @@
 package com.massivecraft.factions;
 
 import com.massivecraft.factions.data.json.JSONBoard;
+import com.massivecraft.factions.data.mysql.MySqlBoard;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.World;
 
@@ -17,7 +18,15 @@ public abstract class Board {
     public abstract String getIdAt(FLocation flocation);
 
     private static Board getBoardImpl() {
-        return new JSONBoard(); // TODO switch on configuration backend
+        String dataType = FactionsPlugin.getInstance().conf().data().getStorageType().toLowerCase(); // because what's the chances someone types MySql or mysql
+        switch (dataType) {
+            case "mysql":
+                return new MySqlBoard();
+            case "json":
+                return new JSONBoard();
+            default:
+                throw new RuntimeException("The specified datatype is undefined.");
+        }
     }
 
     public static Board getInstance() {

@@ -1,6 +1,7 @@
 package com.massivecraft.factions;
 
 import com.massivecraft.factions.data.json.JSONFPlayers;
+import com.massivecraft.factions.data.mysql.MySqlFPlayers;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -16,8 +17,15 @@ public abstract class FPlayers {
     }
 
     private static FPlayers getFPlayersImpl() {
-        // TODO switch on configuration backend
-        return new JSONFPlayers();
+        String dataType = FactionsPlugin.getInstance().conf().data().getStorageType().toLowerCase(); // because what's the chances someone types MySql or mysql
+        switch (dataType) {
+            case "mysql":
+                return new MySqlFPlayers();
+            case "json":
+                return new JSONFPlayers();
+            default:
+                throw new RuntimeException("The specified datatype is undefined.");
+        }
     }
 
     public abstract Collection<FPlayer> getOnlinePlayers();
@@ -35,4 +43,6 @@ public abstract class FPlayers {
     public abstract FPlayer getById(String string);
 
     public abstract int load();
+
+
 }

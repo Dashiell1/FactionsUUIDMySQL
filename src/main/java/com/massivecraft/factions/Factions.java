@@ -1,11 +1,13 @@
 package com.massivecraft.factions;
 
 import com.massivecraft.factions.data.json.JSONFactions;
+import com.massivecraft.factions.data.mysql.MySqlFactions;
 
 import java.util.ArrayList;
 import java.util.Set;
 
 public abstract class Factions {
+
     protected static Factions instance = getFactionsImpl();
 
     public abstract Faction getFactionById(String id);
@@ -44,9 +46,18 @@ public abstract class Factions {
     }
 
     private static Factions getFactionsImpl() {
-        // TODO switch on configuration backend
-        return new JSONFactions();
+        String dataType = FactionsPlugin.getInstance().conf().data().getStorageType().toLowerCase(); // because what's the chances someone types MySql or mysql
+        switch (dataType) {
+            case "mysql":
+                return new MySqlFactions();
+            case "json":
+                return new JSONFactions();
+            default:
+                throw new RuntimeException("The specified datatype is undefined.");
+        }
     }
 
     public abstract int load();
+
+
 }
